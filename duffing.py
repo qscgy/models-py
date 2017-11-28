@@ -21,7 +21,7 @@ def rk4(yn, tn, h, a, b, r, w):
 
 a = 4
 b = 0.154
-r = 2.28
+r = 2.21
 w = 1.22
 y = np.array([2, 0])
 yf = 800
