@@ -3,11 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.patches import Rectangle
-import random
 
 a = 4
 b = 0.154
-r = 2.21
+r = 2.5
 w = 1.22
 y = np.array([0.1, 0.1])
 yf = 100
@@ -30,7 +29,7 @@ side = 1
 cursor = ax2.axvline(counter*dt, color="red")
 
 
-# Get the y coordinates of the points in the spring.
+# Get the y coordinates of the points in the spring
 def y_pts(n, h):
     ys = []
     cur = h
@@ -41,7 +40,7 @@ def y_pts(n, h):
 
 def animate(i):
     global x,y,counter
-    y1 = fun(counter)+5
+    y1 = fun(counter)+5 # resting position is at x=5
     plt.subplot(2, 1, 1)
     ax1.clear()
     plt.xlim(0,10)
@@ -51,18 +50,18 @@ def animate(i):
     plt.plot([0, 10], [-side/2, -side/2], color="black")    # plot the ground
     plt.plot(np.linspace(0, y1-side/2, n), y_pts(n, 0.4))  # plot the spring
     # plt.plot(y1,0,marker="s",ms=40) # plot the mass
-    ax1.add_patch(Rectangle((y1-side/2, -side/2), side, side))
-    counter += 10
+    ax1.add_patch(Rectangle((y1-side/2, -side/2), side, side))  # plot the mass
+    counter += 25
 
     # ax2.clear()
     plt.subplot(2, 1, 2)
     # plt.plot(t_range, [item[0] for item in sol])
     # plt.plot([counter*dt, counter*dt],[-5, 5])
     # fig.canvas.draw()
-    cursor.set_xdata(counter*dt)
+    cursor.set_xdata(counter*dt)    # update the cursor
 
 
 plt.subplot(2, 1, 2)
 plt.plot(t_range, [item[0] for item in sol])
-ani = animation.FuncAnimation(fig,animate,interval=1)
+ani = animation.FuncAnimation(fig,animate,interval=25)
 plt.show()
