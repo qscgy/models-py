@@ -1,17 +1,38 @@
 #Duffing equation project
 import numpy as np
 import matplotlib
-matplotlib.use(("TkAgg"))
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 
-#Takes the current values of the coupled system and returns their derivatives
+# We are analyzing the behavior of this dynamical system. The Duffing equation is a nonlinear second order ODE, which
+# means that x(t) will either hit a fixed point, oscillate, or be chaotic, and we can plot the local extrema.
+# But this would just be points on a number line, and that's boring. So, we can also look at the phase-space
+# trajectories of the system. If the system is periodic (in steady state), the phase-space trajectory over a period will
+# be a closed curve. Furthermore, it will be the same curve every period. But if the system is chaotic, it is aperiodic,
+# meaning that the trajectory will be all over the place. In order to see the structure in the chaos, we need to use a
+# Poincare section.
+# Conceptually, a Poincare section is what you get if you intersect an (n-1)-dimensional surface with an n-dimestional
+# trajectory and plot the points of intersection. Mathematically, a Poincare section has a surface S of dimension one
+# less than that of the system, and a mapping P. P has the following properties:
+#   Given a point x0 on the trajectory and on S, x_1=P(x_0)
+#   x_k+1=P(x_k), where both are on S and on the trajectory
+# But if you look at the code or run the program, you'll see that the Poincare sections are 2D, and so is our system!
+# You should be confused by this, so read on. It turns out that the t in the equation for y means our system is not
+# exactly 2D. It also means that we can introduce a third coordinate, z, where dz/dt = w. This means that
+# dy/dt = x - by - ax^3 + r cos(z). The t is gone, and we have an autonomous 3D system. This substitution also means we
+# can define a Poincare map P(x(t)) = x(t+2pi/w). With periodic behavior, P will oscillate between a finite number of
+# points. But with chaotic behavior, P will not repeat. It will, however, always fall on a fractal curve called a
+# strange attractor.
+
+
+# Takes the current values of the coupled system and returns their derivatives
 def duffing(y, t, a, b, r, w):
     x, xp = y
     dydt = np.zeros(2)
     dydt[0] = xp
-    dydt[1] = x - b*xp - a*(x**3) +r*np.cos(w*t)
+    dydt[1] = x - b*xp - a*(x**3) + r*np.cos(w*t)  # Mathematically, dy/dt = x - by - ax^3 + r cos(z)
     return dydt
 
 # Custom method to run RK4; much slower than odeint
@@ -46,7 +67,7 @@ def bifurcation(a, b, w, y):
     for r in np.arange(5.2, 5.9, 0.001):
         print(r)
         sol = solve(a, b, r, w, y, yf, dt, t_range, True)
-        sol_x = np.array([item[0] for item in sol]) # Extract x values into a numpy array (for speed)
+        sol_x = np.array([item[0] for item in sol])  # Extract x values into a numpy array (for speed)
         ys = np.array([item[1] for item in sol])
         '''
         for i in range(1, sol.shape[0]-1):
@@ -75,7 +96,7 @@ def plot(t_range, sol):
     plt.show()
 
 
-# Plot Poincare section
+# Plot Poincare section. When there is a single fixed point, the plot will look like a line due to rounding and zooming.
 def attractor(sol, w, dt):
     xs = [item[0] for item in sol]
     ys = [item[1] for item in sol]
@@ -83,10 +104,10 @@ def attractor(sol, w, dt):
     yt = []
     for i in np.arange(0, sol.shape[0], 2*np.pi/w/dt):
         print(i)
-        if i > sol.shape[0]/2:  # Steady state behavior should be dominant by then
-          xt.append(xs[int(i)])
-          yt.append(ys[int(i)])
+        if i > sol.shape[0]*0.4:    # skip over transient
+            xt.append(xs[int(i)])
+            yt.append(ys[int(i)])
 
     print(xt)
-    plt.plot(xt, yt, 'ro', ms=1)
+    plt.plot(xt, yt, 'ro', ms=5)
     plt.show()
