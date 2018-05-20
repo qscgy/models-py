@@ -4,10 +4,10 @@ from duffing import *
 # Initialize variables
 a = 4
 b = 0.154
-r = 2.5
+r = 6.1
 w = 1.2199778
 y = np.array([0.1, 0.1])
-yf = 2000
+yf = 40000
 dt = 0.001
 t_range = np.arange(0, yf, dt)
 

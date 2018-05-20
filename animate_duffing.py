@@ -19,9 +19,11 @@ fig = plt.figure()
 ax1 = fig.add_subplot(2,1,1)
 ax2 = fig.add_subplot(2, 1, 2)
 
+
 def fun(x):
     # print(sol[x][0])
     return sol[x][0]
+
 
 counter = 0
 n = 15  # number of "periods" of the spring; purely for aesthetics
@@ -39,12 +41,12 @@ def y_pts(n, h):
     return ys
 
 def animate(i):
-    global x,y,counter
-    y1 = fun(counter)+5 # resting position is at x=5
+    global x, y, counter
+    y1 = fun(counter)+5  # resting position is at x = 5
     plt.subplot(2, 1, 1)
     ax1.clear()
-    plt.xlim(0,10)
-    plt.ylim(-3,3)
+    plt.xlim(0, 10)
+    plt.ylim(-3, 3)
     # plt.plot([x for x in range(500)],[-2.15 for x in range(500)],lw=2,color="black")
     # plt.plot([0, 0], [-3, 3])
     plt.plot([0, 10], [-side/2, -side/2], color="black")    # plot the ground
